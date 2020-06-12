@@ -26,23 +26,28 @@ public class BlogAPIController {
     }
 
     @PostMapping("/blogs")
-    public ResponseEntity<Void> createBlog(@RequestBody Blog blog) {
+    public ResponseEntity<Blog> createBlog(@RequestBody Blog blog) {
         blogService.saveBlog(blog);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/blogs/{id}")
-    public ResponseEntity<Void> editBlog(@PathVariable("id") Long id, @RequestBody Blog blog) {
+    public ResponseEntity<Blog> editBlog(@PathVariable("id") Long id, @RequestBody Blog blog) {
         Blog blog1 = blogService.findBlogById(id);
         blog1.setTitle(blog.getTitle());
         blog1.setContent(blog.getContent());
         blog1.setCategory(blog.getCategory());
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        blogService.saveBlog(blog1);
+        return new ResponseEntity<>(blog, HttpStatus.OK);
     }
 
     @DeleteMapping("/blogs/{id}")
-    public ResponseEntity<Void> deleteBlog(@PathVariable("id") Long id) {
-        blogService.removeBlog(id);
-        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+    public ResponseEntity<Blog> deleteBlog(@PathVariable("id") Long id) {
+        Blog blog = blogService.findBlogById(id);
+        if (blog != null) {
+            blogService.removeBlog(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

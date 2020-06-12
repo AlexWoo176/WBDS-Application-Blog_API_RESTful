@@ -27,25 +27,25 @@ public class CategoryAPIController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<Void> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         categoryService.saveCategory(category);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/categories/{id}")
-    public ResponseEntity<Void> updateCategory(@RequestBody Category category, @PathVariable("id") Long id) {
+    public ResponseEntity<Category> updateCategory(@RequestBody Category category, @PathVariable("id") Long id) {
         Category category1 = categoryService.findByIdCategories(id);
         category1.setName(category.getName());
         categoryService.saveCategory(category1);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<Category>(HttpStatus.OK);
     }
 
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
+    public ResponseEntity<Category> deleteCategory(@PathVariable("id") Long id) {
         if (categoryService.findByIdCategories(id) == null) {
-            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Category>(HttpStatus.NOT_FOUND);
         }
         categoryService.removeCategory(id);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<Category>(HttpStatus.NO_CONTENT);
     }
 }
